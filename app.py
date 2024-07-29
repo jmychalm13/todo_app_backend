@@ -72,6 +72,17 @@ def delete(todo_id):
     return jsonify({"error": "Todo not found"}), 404
 
 
+@app.route("/todo/<int:id>/complete", methods=["PATCH"])
+def update_to_complete(id):
+    todo = Todo.query.get(id)
+    if not todo:
+        return jsonify({"error": "Todo not found"}), 404
+
+    todo.complete = request.json.get("complete", todo.complete)
+    db.session.commit()
+    return jsonify({"id": todo.id, "complete status": todo.complete})
+
+
 def create_tables():
     with app.app_context():
         db.create_all()
