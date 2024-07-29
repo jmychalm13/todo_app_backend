@@ -34,15 +34,21 @@ def add():
     if not data:
         return jsonify({"error": "Invalid Input"}), 400
     title = data.get("title")
+    complete = False
     if not title:
         return jsonify({"error": "Title is required"}), 400
 
     # create new todo
-    new_todo = Todo(title=title)
+    new_todo = Todo(title=title, complete=False)
     db.session.add(new_todo)
     db.session.commit()
 
-    return jsonify({"id": new_todo.id, "title": new_todo.title}), 201
+    return (
+        jsonify(
+            {"id": new_todo.id, "title": new_todo.title, "complete": new_todo.complete}
+        ),
+        201,
+    )
 
 
 @app.route("/update/<int:todo_id>", methods=["PATCH"])
